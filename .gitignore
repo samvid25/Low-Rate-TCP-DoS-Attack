@@ -3,6 +3,7 @@
 .o
 build-dir
 build
+*.pcap
 testpy-output
 doc/html
 doc/latex
