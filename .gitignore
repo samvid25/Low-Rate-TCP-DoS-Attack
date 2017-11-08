@@ -4,6 +4,7 @@
 build-dir
 build
 *.pcap
+PCAPs
 testpy-output
 doc/html
 doc/latex
