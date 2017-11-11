@@ -67,11 +67,16 @@ main (int argc, char *argv[])
   NodeContainer nodes;
   nodes.Create (5);
 
+  // Default is TcpNewReno
+  Config::SetDefault ("ns3::TcpL4Protocol::SocketType", StringValue ("ns3::TcpNewReno"));
+
   // Define the Point-To-Point Links (Helpers) and their Paramters
   PointToPointHelper pp1, pp2;
   pp1.SetDeviceAttribute ("DataRate", StringValue ("100Mbps"));
   pp1.SetChannelAttribute ("Delay", StringValue ("1ms"));
-
+  
+  // Add a DropTailQueue to the Bottleneck Link
+  pp2.SetQueue("ns3::DropTailQueue",  "MaxPackets",UintegerValue(1));
   pp2.SetDeviceAttribute ("DataRate", StringValue ("1.5Mbps"));
   pp2.SetChannelAttribute ("Delay", StringValue ("20ms"));
 
@@ -97,37 +102,34 @@ main (int argc, char *argv[])
   i12 = a12.Assign(d12);
   i23 = a23.Assign(d23);
   i34 = a34.Assign(d34);
-  //
-  // OnOffHelper onoff ("ns3::UdpSocketFactory",
-  //                    Address (InetSocketAddress (i34.GetAddress(1),UDP_SINK_PORT)));
-  // onoff.SetConstantRate (DataRate (ATTACKER_DoS_RATE));
-  // onoff.SetAttribute ("OnTime", StringValue
-  //   ("ns3::ConstantRandomVariable[Constant=1]"));
-  // onoff.SetAttribute ("OffTime", StringValue
-  //   ("ns3::ConstantRandomVariable[Constant=0]"));
-  // ApplicationContainer onOffApp = onoff.Install (nodes.Get(1));
-  // onOffApp.Start(Seconds(0.0));
-  // onOffApp.Stop(Seconds(0.01));
-  // Simulator::Schedule((Seconds(5.0)), &scheduler, &onOffApp);
-  // onOffApp.Start (Seconds (2.0));
-  // onOffApp.Stop (Seconds (10.0));
+  
+  OnOffHelper onoff ("ns3::UdpSocketFactory",
+                     Address (InetSocketAddress (i34.GetAddress(1),UDP_SINK_PORT)));
+  onoff.SetConstantRate (DataRate ("12000kb/s"));
+  onoff.SetAttribute ("OnTime", StringValue
+    ("ns3::ConstantRandomVariable[Constant=0.25]"));
+  onoff.SetAttribute ("OffTime", StringValue
+    ("ns3::ConstantRandomVariable[Constant=0.75]"));
+  ApplicationContainer onOffApp = onoff.Install (nodes.Get(1));
+  onOffApp.Start(Seconds(0.0));
+  onOffApp.Stop(Seconds(MAX_SIMULATION_TIME));
 
-  //
-  int numberOfApps = MAX_SIMULATION_TIME;
-  UdpClientHelper attackerApps[numberOfApps];
-  ApplicationContainer attackerAppsContainer[numberOfApps];
-  for(int i=0;i<numberOfApps;i++){
-    attackerApps[i].SetAttribute("RemoteAddress",AddressValue(i34.GetAddress(1)));
-    attackerApps[i].SetAttribute("RemotePort",UintegerValue(UDP_SINK_PORT));
-    attackerApps[i].SetAttribute ("MaxPackets", UintegerValue (1000000000));
-    attackerApps[i].SetAttribute ("Interval", TimeValue (Seconds(0.0005)));
-    attackerApps[i].SetAttribute ("PacketSize", UintegerValue (1000));
-    attackerAppsContainer[i] = attackerApps[i].Install(nodes.Get (1));
-  }
-  for(int i=0;i<numberOfApps;i++){
-    attackerAppsContainer[i].Start(Seconds(i+ATTACKER_START));
-    attackerAppsContainer[i].Stop(Seconds(i+ATTACKER_START+BURST_LENGTH));
-  }
+  
+  // int numberOfApps = MAX_SIMULATION_TIME;
+  // UdpClientHelper attackerApps[numberOfApps];
+  // ApplicationContainer attackerAppsContainer[numberOfApps];
+  // for(int i=0;i<numberOfApps;i++){
+  //   attackerApps[i].SetAttribute("RemoteAddress",AddressValue(i34.GetAddress(1)));
+  //   attackerApps[i].SetAttribute("RemotePort",UintegerValue(UDP_SINK_PORT));
+  //   attackerApps[i].SetAttribute ("MaxPackets", UintegerValue (1000000000));
+  //   attackerApps[i].SetAttribute ("Interval", TimeValue (Seconds(0.0005)));
+  //   attackerApps[i].SetAttribute ("PacketSize", UintegerValue (1000));
+  //   attackerAppsContainer[i] = attackerApps[i].Install(nodes.Get (1));
+  // }
+  // for(int i=0;i<numberOfApps;i++){
+  //   attackerAppsContainer[i].Start(Seconds(i+ATTACKER_START));
+  //   attackerAppsContainer[i].Stop(Seconds(i+ATTACKER_START+BURST_LENGTH));
+  // }
 
   // UdpClientHelper attackerApps;
   // attackerApps.SetAttribute("RemoteAddress",AddressValue(i34.GetAddress(1)));
@@ -144,7 +146,7 @@ main (int argc, char *argv[])
                          InetSocketAddress (i34.GetAddress(1), TCP_SINK_PORT));
   bulkSend.SetAttribute ("MaxBytes", UintegerValue (BULK_SEND_MAX_BYTES));
   ApplicationContainer bulkSendApp = bulkSend.Install (nodes.Get(0));
-  bulkSendApp.Start (Seconds (0.0));
+  bulkSendApp.Start (Seconds (0.75));
   bulkSendApp.Stop (Seconds (MAX_SIMULATION_TIME-10));
   //
   PacketSinkHelper UDPsink ("ns3::UdpSocketFactory",
