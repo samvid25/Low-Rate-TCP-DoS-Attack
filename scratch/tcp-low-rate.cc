@@ -26,7 +26,7 @@
 
 //parameters to change
 #define BULK_SEND_MAX_BYTES 2097152
-#define MAX_SIMULATION_TIME 50.0
+#define MAX_SIMULATION_TIME 100.0
 #define BURST_LENGTH 0.5
 #define ATTACKER_START 0.071
 
