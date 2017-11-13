@@ -1,0 +1,224 @@
+<html>
+  <head>
+    <title>Charts</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-*.min.js"></script>
+
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="col-sm-2">
+      </div>
+      <div class="col-sm-8">
+        <div  style = "width:600px;height:400px;text-align:center;">
+          <canvas id="myChart"></canvas>
+          <br />
+          <select id="graphType" class="selectpicker">
+            <option value="bl025">Burst Length : 0.25s</option>
+            <option value="bl015">Burst Length : 0.15s</option>
+            <option value="bl020">Burst Length : 0.20s</option>
+            <option value="all">All</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script>
+      function all(){
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+        // The data for our dataset
+        data: {
+            labels: ["0.5","0.8","1.0","1.2","1.4","1.6","1.8","2.0"],
+            datasets: [{
+              label: "Burst Length = 0.25 s",
+              borderColor: 'rgb(255, 99, 132)',
+              data: [0.0049200492, 0.0691266913, 0.003198032, 0.2194341943, 0.50799508, 0.50799508,
+                0.8467404674, 0.9633456335, 0.9633456335],
+              fill : false,
+            },
+            {
+              label : "Burst Length = 0.15 s",
+              borderColor : 'rgb(44, 186, 37)',
+              data : [0.0669126691, 0.2068880689, 0.0856088561, 0.4312423124, 0.5126691267, 0.3193111931,
+                0.7180811808, 0.8578105781, 0.6386223862],
+              fill : false,
+            },
+            {
+              label : "Burst Length = 0.2 s",
+              borderColor : 'rgb(45, 37, 188)',
+              data : [0.0661746617, 0.0654366544, 0.0661746617, 0.0669126691, 0.0666666667, 0.0686346863,
+                0.1901599016, 0.181303813],
+              fill : false,
+            }
+          ]
+        },
+        // Configuration options go here
+        options: {
+          scales:{
+            xAxes:[{
+              display : true,
+              scaleLabel : {
+                display : true,
+                labelString : 'Burst Period (in seconds)'
+              }
+            }],
+            yAxes:[{
+              display : true,
+              scaleLabel : {
+                display : true,
+                labelString : 'Throughput'
+              }
+            }]
+          }
+        }
+      });
+      }
+
+      function bl025(){
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+        // The data for our dataset
+        data: {
+            labels: ["0.5","0.8","1.0","1.2","1.4","1.6","1.8","2.0"],
+            datasets: [{
+              label: "Burst Length = 0.25 s",
+              borderColor: 'rgb(255, 99, 132)',
+              data: [0.0049200492, 0.0691266913, 0.003198032, 0.2194341943, 0.50799508, 0.50799508,
+                0.8467404674, 0.9633456335, 0.9633456335],
+              fill : false,
+            },
+          ]
+        },
+        // Configuration options go here
+        options: {
+          scales:{
+            xAxes:[{
+              display : true,
+              scaleLabel : {
+                display : true,
+                labelString : 'Burst Period (in seconds)'
+              }
+            }],
+            yAxes:[{
+              display : true,
+              scaleLabel : {
+                display : true,
+                labelString : 'Throughput'
+              }
+            }]
+          }
+        }
+      });
+      }
+
+      function bl015(){
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+        // The data for our dataset
+        data: {
+            labels: ["0.5","0.8","1.0","1.2","1.4","1.6","1.8","2.0"],
+            datasets: [
+            {
+              label : "Burst Length = 0.15 s",
+              borderColor : 'rgb(44, 186, 37)',
+              data : [0.0669126691, 0.2068880689, 0.0856088561, 0.4312423124, 0.5126691267, 0.3193111931,
+                0.7180811808, 0.8578105781, 0.6386223862],
+              fill : false,
+            },
+          ]
+        },
+        // Configuration options go here
+        options: {
+          scales:{
+            xAxes:[{
+              display : true,
+              scaleLabel : {
+                display : true,
+                labelString : 'Burst Period (in seconds)'
+              }
+            }],
+            yAxes:[{
+              display : true,
+              scaleLabel : {
+                display : true,
+                labelString : 'Throughput'
+              }
+            }]
+          }
+        }
+      });
+      }
+
+      function bl020(){
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+        // The data for our dataset
+        data: {
+            labels: ["0.5","0.8","1.0","1.2","1.4","1.6","1.8","2.0"],
+            datasets: [
+            {
+              label : "Burst Length = 0.2 s",
+              borderColor : 'rgb(45, 37, 188)',
+              data : [0.0661746617, 0.0654366544, 0.0661746617, 0.0669126691, 0.0666666667, 0.0686346863,
+                0.1901599016, 0.181303813],
+              fill : false,
+            }
+          ]
+        },
+        // Configuration options go here
+        options: {
+          scales:{
+            xAxes:[{
+              display : true,
+              scaleLabel : {
+                display : true,
+                labelString : 'Burst Period (in seconds)'
+              }
+            }],
+            yAxes:[{
+              display : true,
+              scaleLabel : {
+                display : true,
+                labelString : 'Throughput'
+              }
+            }]
+          }
+        }
+      });
+      }
+
+      $(document).ready(function(){
+        bl025();
+      });
+      $('#graphType').change(function(){
+        if($(this).val()==='all'){
+          all();
+        }
+        else if($(this).val()==='bl025'){
+          bl025();
+        }
+        else if($(this).val()==='bl015'){
+          bl015();
+        }
+        if($(this).val()==='bl020'){
+          bl020();
+        }
+      });
+    </script>
+  </body>
+</html>
