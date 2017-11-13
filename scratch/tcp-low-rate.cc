@@ -13,45 +13,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- #include "ns3/nstime.h"
-#include "ns3/core-module.h"
-#include "ns3/network-module.h"
-#include "ns3/internet-module.h"
-#include "ns3/point-to-point-module.h"
-#include "ns3/applications-module.h"
-#include "ns3/ipv4-global-routing-helper.h"
 
-#define TCP_SINK_PORT 9000
-#define UDP_SINK_PORT 9001
+/* 
+ * The topology used to simulate this attack contains 5 nodes as follows:
+ * n0 -> alice (sender)
+ * n1 -> eve (attacker)
+ * n2 -> router (common router between alice and eve)
+ * n3 -> router (router conneced to bob)
+ * n4 -> bob (receiver)
 
-//parameters to change
-#define BULK_SEND_MAX_BYTES 2097152
-#define MAX_SIMULATION_TIME 100.0
-#define BURST_LENGTH 0.5
-#define ATTACKER_START 0.071
-
-
-using namespace ns3;
-
-NS_LOG_COMPONENT_DEFINE ("FirstScriptExample");
-
-int
-main (int argc, char *argv[])
-{
-  CommandLine cmd;
-  cmd.Parse (argc, argv);
-
-  Time::SetResolution (Time::NS);
-  LogComponentEnable ("UdpEchoClientApplication", LOG_LEVEL_INFO);
-  LogComponentEnable ("UdpEchoServerApplication", LOG_LEVEL_INFO);
-
-  // The Topology contains 5 nodes as follows:
-  // 0 -> alice (sender)
-  // 1 -> eve (attacker)
-  // 2 -> switch (common switch between alice and eve)
-  // 3 -> switch (switch conneced to bob)
-  // 4 -> bob (receiver)
-  /*
      n1
         \ pp1 (100 Mbps, 2ms RTT)
          \
@@ -63,38 +33,77 @@ main (int argc, char *argv[])
          /
         / pp1 (100 Mbps, 2ms RTT)
      n0
-  */
+
+*/
+
+#include "ns3/nstime.h"
+#include "ns3/core-module.h"
+#include "ns3/network-module.h"
+#include "ns3/internet-module.h"
+#include "ns3/point-to-point-module.h"
+#include "ns3/applications-module.h"
+#include "ns3/ipv4-global-routing-helper.h"
+
+
+#define TCP_SINK_PORT 9000
+#define UDP_SINK_PORT 9001
+
+// Variable parameters
+#define BULK_SEND_MAX_BYTES 2097152
+#define MAX_SIMULATION_TIME 100.0
+#define BURST_LENGTH 0.5
+#define ATTACKER_START 0.071
+
+using namespace ns3;
+
+NS_LOG_COMPONENT_DEFINE("FirstScriptExample");
+
+int main(int argc, char *argv[])
+{
+  CommandLine cmd;
+  cmd.Parse(argc, argv);
+
+  Time::SetResolution(Time::NS);
+  LogComponentEnable("UdpEchoClientApplication", LOG_LEVEL_INFO);
+  LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
+
+
   NodeContainer nodes;
-  nodes.Create (5);
+  nodes.Create(5);
 
-  // Default is TcpNewReno
-  Config::SetDefault ("ns3::TcpL4Protocol::SocketType", StringValue ("ns3::TcpNewReno"));
 
-  // Define the Point-To-Point Links (Helpers) and their Paramters
+  // Default TCP is TcpNewReno (no need to change, unless experimenting with other variants)
+  Config::SetDefault("ns3::TcpL4Protocol::SocketType", StringValue("ns3::TcpNewReno"));
+
+
+  // Define the Point-to-Point links (helpers) and their paramters
   PointToPointHelper pp1, pp2;
-  pp1.SetDeviceAttribute ("DataRate", StringValue ("100Mbps"));
-  pp1.SetChannelAttribute ("Delay", StringValue ("1ms"));
-  
-  // Add a DropTailQueue to the Bottleneck Link
-  pp2.SetQueue("ns3::DropTailQueue",  "MaxPackets",UintegerValue(1));
-  pp2.SetDeviceAttribute ("DataRate", StringValue ("1.5Mbps"));
-  pp2.SetChannelAttribute ("Delay", StringValue ("20ms"));
+  pp1.SetDeviceAttribute("DataRate", StringValue("100Mbps"));
+  pp1.SetChannelAttribute("Delay", StringValue("1ms"));
 
-  // Install the Point-To-Point Connections between Nodes
+  // Add a DropTailQueue to the bottleneck link
+  pp2.SetQueue("ns3::DropTailQueue", "MaxPackets", UintegerValue(1));
+  pp2.SetDeviceAttribute("DataRate", StringValue("1.5Mbps"));
+  pp2.SetChannelAttribute("Delay", StringValue("20ms"));
+
+
+  // Install the Point-to-Point links between nodes
   NetDeviceContainer d02, d12, d23, d34;
-  d02 = pp1.Install (nodes.Get(0),nodes.Get(2));
-  d12 = pp1.Install (nodes.Get(1),nodes.Get(2));
-  d23 = pp2.Install (nodes.Get(2),nodes.Get(3));
-  d34 = pp1.Install (nodes.Get(3),nodes.Get(4));
+  d02 = pp1.Install(nodes.Get(0), nodes.Get(2));
+  d12 = pp1.Install(nodes.Get(1), nodes.Get(2));
+  d23 = pp2.Install(nodes.Get(2), nodes.Get(3));
+  d34 = pp1.Install(nodes.Get(3), nodes.Get(4));
+
 
   InternetStackHelper stack;
-  stack.Install (nodes);
+  stack.Install(nodes);
+
 
   Ipv4AddressHelper a02, a12, a23, a34;
-  a02.SetBase ("10.1.1.0", "255.255.255.0");
-  a12.SetBase ("10.1.2.0", "255.255.255.0");
-  a23.SetBase ("10.1.3.0", "255.255.255.0");
-  a34.SetBase ("10.1.4.0", "255.255.255.0");
+  a02.SetBase("10.1.1.0", "255.255.255.0");
+  a12.SetBase("10.1.2.0", "255.255.255.0");
+  a23.SetBase("10.1.3.0", "255.255.255.0");
+  a34.SetBase("10.1.4.0", "255.255.255.0");
 
 
   Ipv4InterfaceContainer i02, i12, i23, i34;
@@ -102,70 +111,48 @@ main (int argc, char *argv[])
   i12 = a12.Assign(d12);
   i23 = a23.Assign(d23);
   i34 = a34.Assign(d34);
-  
-  OnOffHelper onoff ("ns3::UdpSocketFactory",
-                     Address (InetSocketAddress (i34.GetAddress(1),UDP_SINK_PORT)));
-  onoff.SetConstantRate (DataRate ("12000kb/s"));
-  onoff.SetAttribute ("OnTime", StringValue
-    ("ns3::ConstantRandomVariable[Constant=0.25]"));
-  onoff.SetAttribute ("OffTime", StringValue
-    ("ns3::ConstantRandomVariable[Constant=0.75]"));
-  ApplicationContainer onOffApp = onoff.Install (nodes.Get(1));
+
+
+  // UDP On-Off Application - Application used by attacker (eve) to create the low-rate bursts.
+  OnOffHelper onoff("ns3::UdpSocketFactory",
+                    Address(InetSocketAddress(i34.GetAddress(1), UDP_SINK_PORT)));
+  onoff.SetConstantRate(DataRate("12000kb/s"));
+  onoff.SetAttribute("OnTime", StringValue("ns3::ConstantRandomVariable[Constant=0.25]"));
+  onoff.SetAttribute("OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0.75]"));
+  ApplicationContainer onOffApp = onoff.Install(nodes.Get(1));
   onOffApp.Start(Seconds(0.0));
   onOffApp.Stop(Seconds(MAX_SIMULATION_TIME));
 
-  
-  // int numberOfApps = MAX_SIMULATION_TIME;
-  // UdpClientHelper attackerApps[numberOfApps];
-  // ApplicationContainer attackerAppsContainer[numberOfApps];
-  // for(int i=0;i<numberOfApps;i++){
-  //   attackerApps[i].SetAttribute("RemoteAddress",AddressValue(i34.GetAddress(1)));
-  //   attackerApps[i].SetAttribute("RemotePort",UintegerValue(UDP_SINK_PORT));
-  //   attackerApps[i].SetAttribute ("MaxPackets", UintegerValue (1000000000));
-  //   attackerApps[i].SetAttribute ("Interval", TimeValue (Seconds(0.0005)));
-  //   attackerApps[i].SetAttribute ("PacketSize", UintegerValue (1000));
-  //   attackerAppsContainer[i] = attackerApps[i].Install(nodes.Get (1));
-  // }
-  // for(int i=0;i<numberOfApps;i++){
-  //   attackerAppsContainer[i].Start(Seconds(i+ATTACKER_START));
-  //   attackerAppsContainer[i].Stop(Seconds(i+ATTACKER_START+BURST_LENGTH));
-  // }
 
-  // UdpClientHelper attackerApps;
-  // attackerApps.SetAttribute("RemoteAddress",AddressValue(i34.GetAddress(1)));
-  // attackerApps.SetAttribute("RemotePort",UintegerValue(UDP_SINK_PORT));
-  // attackerApps.SetAttribute ("MaxPackets", UintegerValue (1000000000));
-  // attackerApps.SetAttribute ("Interval", TimeValue (Seconds(0.0005)));
-  // attackerApps.SetAttribute ("PacketSize", UintegerValue (1000));
-  // ApplicationContainer ac = attackerApps.Install(nodes.Get(1));
-  // ac.Start(Seconds(0.0));
-  // ac.Stop(Seconds(MAX_SIMULATION_TIME));
+  // TCP Bulk Send Application - Application used by the legit node (alice) to send data to a receiver.
+  BulkSendHelper bulkSend("ns3::TcpSocketFactory",
+                          InetSocketAddress(i34.GetAddress(1), TCP_SINK_PORT));
+  bulkSend.SetAttribute("MaxBytes", UintegerValue(BULK_SEND_MAX_BYTES));
+  ApplicationContainer bulkSendApp = bulkSend.Install(nodes.Get(0));
+  bulkSendApp.Start(Seconds(0.75));
+  bulkSendApp.Stop(Seconds(MAX_SIMULATION_TIME));
 
 
-  BulkSendHelper bulkSend ("ns3::TcpSocketFactory",
-                         InetSocketAddress (i34.GetAddress(1), TCP_SINK_PORT));
-  bulkSend.SetAttribute ("MaxBytes", UintegerValue (BULK_SEND_MAX_BYTES));
-  ApplicationContainer bulkSendApp = bulkSend.Install (nodes.Get(0));
-  bulkSendApp.Start (Seconds (0.75));
-  bulkSendApp.Stop (Seconds (MAX_SIMULATION_TIME-10));
-  //
-  PacketSinkHelper UDPsink ("ns3::UdpSocketFactory",
-                         Address (InetSocketAddress (Ipv4Address::GetAny (), UDP_SINK_PORT)));
-  ApplicationContainer UDPSinkApp = UDPsink.Install (nodes.Get(4));
-  UDPSinkApp.Start (Seconds (0.0));
-  UDPSinkApp.Stop (Seconds (MAX_SIMULATION_TIME));
+  // UDP sink on the receiver (bob).
+  PacketSinkHelper UDPsink("ns3::UdpSocketFactory",
+                           Address(InetSocketAddress(Ipv4Address::GetAny(), UDP_SINK_PORT)));
+  ApplicationContainer UDPSinkApp = UDPsink.Install(nodes.Get(4));
+  UDPSinkApp.Start(Seconds(0.0));
+  UDPSinkApp.Stop(Seconds(MAX_SIMULATION_TIME));
 
-  PacketSinkHelper TCPsink ("ns3::TcpSocketFactory",
-                         InetSocketAddress (Ipv4Address::GetAny (), TCP_SINK_PORT));
-  ApplicationContainer TCPSinkApp = TCPsink.Install (nodes.Get (4));
-  TCPSinkApp.Start (Seconds (0.0));
-  TCPSinkApp.Stop (Seconds (MAX_SIMULATION_TIME));
 
-  Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
+  // TCP sink on the receiver (bob).
+  PacketSinkHelper TCPsink("ns3::TcpSocketFactory",
+                           InetSocketAddress(Ipv4Address::GetAny(), TCP_SINK_PORT));
+  ApplicationContainer TCPSinkApp = TCPsink.Install(nodes.Get(4));
+  TCPSinkApp.Start(Seconds(0.0));
+  TCPSinkApp.Stop(Seconds(MAX_SIMULATION_TIME));
+
+  Ipv4GlobalRoutingHelper::PopulateRoutingTables();
 
   pp1.EnablePcapAll("PCAPs/tcplow");
 
-  Simulator::Run ();
-  Simulator::Destroy ();
+  Simulator::Run();
+  Simulator::Destroy();
   return 0;
 }
