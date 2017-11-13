@@ -31,9 +31,21 @@ The PCAP files are stored in the Low-Rate-TCP-DoS-Attack/PCAPs folder for furthe
 
 <hr>
 
+### Experimentation
+The different parameters that affect the attack can be varied by varying the macros in `scratch/tcp-low-rate.cc`.
+* `BULK_SEND_MAX_BYTES`: The maximum bytes the legit sender transmits.
+* `MAX_SIMULATION_TIME`: The duration for which the simulation runs.
+* `ATTACKER_START`: The time at which the attacker node starts the UDP burst.
+* `ATTACKER_RATE`: The data rate of the attacker node's UDP burst.
+* `ON_TIME`: The burst length of the attack burst.
+* `BURST_PERIOD`: The burst period of the attack burst.
+* `OFF_TIME`: The duration for which there is no attacker traffic (`= BURST_PERIOD - ON_TIME`)
+* `SENDER_START`: The time at which the legit sender starts transmitting data.
+
+<hr>
+
 ### Procedure
 * Initially, the following topology is set-up.  
-[//]: # (Insert image)  
 * The legitimate sender runs a TCP Bulk Send application (simulating an actual TCP transfer).
 * The attacker node runs a UDP On Off application (simulating the periodic bursts).
 * The receiving node just has a TCP and UDP sink running to receive the segments/datagrams.
@@ -54,7 +66,9 @@ Burst Duration | Attacker's Rate
 0.2s | 12000KB/s
 0.25s | 7000KB/s
 
-[//]: # (Image)
+<p align = "center">
+<img src = "https://github.com/samvid25/Low-Rate-TCP-DoS-Attack/blob/master/low_rate_doc/graph.png" alt = "Throughput" />
+</p>
 
 <hr>
 
