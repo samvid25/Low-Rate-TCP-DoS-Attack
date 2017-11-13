@@ -43,16 +43,22 @@
 #include "ns3/point-to-point-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/ipv4-global-routing-helper.h"
+#include <cstring>
+#include <cstdlib>
 
 
 #define TCP_SINK_PORT 9000
 #define UDP_SINK_PORT 9001
 
-// Variable parameters
+// Experimentation parameters
 #define BULK_SEND_MAX_BYTES 2097152
 #define MAX_SIMULATION_TIME 100.0
-#define BURST_LENGTH 0.5
-#define ATTACKER_START 0.071
+#define ATTACKER_START 0.0
+#define ATTACKER_RATE (std::string)"12000kb/s"
+#define ON_TIME (std::string)"0.25"
+#define BURST_PERIOD 1
+#define OFF_TIME std::to_string(BURST_PERIOD - stof(ON_TIME))
+#define SENDER_START 0.75 // Must be equal to OFF_TIME
 
 using namespace ns3;
 
@@ -116,11 +122,11 @@ int main(int argc, char *argv[])
   // UDP On-Off Application - Application used by attacker (eve) to create the low-rate bursts.
   OnOffHelper onoff("ns3::UdpSocketFactory",
                     Address(InetSocketAddress(i34.GetAddress(1), UDP_SINK_PORT)));
-  onoff.SetConstantRate(DataRate("12000kb/s"));
-  onoff.SetAttribute("OnTime", StringValue("ns3::ConstantRandomVariable[Constant=0.25]"));
-  onoff.SetAttribute("OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0.75]"));
+  onoff.SetConstantRate(DataRate(ATTACKER_RATE));
+  onoff.SetAttribute("OnTime", StringValue("ns3::ConstantRandomVariable[Constant=" + ON_TIME + "]"));
+  onoff.SetAttribute("OffTime", StringValue("ns3::ConstantRandomVariable[Constant=" + OFF_TIME + "]"));
   ApplicationContainer onOffApp = onoff.Install(nodes.Get(1));
-  onOffApp.Start(Seconds(0.0));
+  onOffApp.Start(Seconds(ATTACKER_START));
   onOffApp.Stop(Seconds(MAX_SIMULATION_TIME));
 
 
@@ -129,7 +135,7 @@ int main(int argc, char *argv[])
                           InetSocketAddress(i34.GetAddress(1), TCP_SINK_PORT));
   bulkSend.SetAttribute("MaxBytes", UintegerValue(BULK_SEND_MAX_BYTES));
   ApplicationContainer bulkSendApp = bulkSend.Install(nodes.Get(0));
-  bulkSendApp.Start(Seconds(0.75));
+  bulkSendApp.Start(Seconds(SENDER_START));
   bulkSendApp.Stop(Seconds(MAX_SIMULATION_TIME));
 
 
