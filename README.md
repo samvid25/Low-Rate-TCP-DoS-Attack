@@ -5,7 +5,19 @@
 ## Assignment: #37
 
 ### Overview
-Low Rate TCP-Targeted DoS is an attack which is difficult to detect as compared to the traditional DoS attacks. This project simulates a Low Rate TCP-Targeted DoS Attack in ns-3.
+DoS attacks can be detected by counter-DoS mechanisms such as CouldFlare. Here, we simulate a 'Low-Rate TCP targetted DoS attack' which is harder to detect as compared to the traditional DoS attacks. 
+
+These DoS attacks make use of the TCP congestion control's retransmission timeout (RTO) functionality to stop communication between a sender and a receiver. Instead of flooding the network with traffic, as in a normal DoS attack, we 'time' these floods such that they congest the network right when the TCP sender retransmits when there is a packet loss. This will lead to the sender waiting for another RTO period, after which this flood repeats again.  
+
+Hence by carefully timing these attack bursts, we can evade counter-DoS mechanisms, and at the same hinder communication between the TCP sender and receiver.
+
+From the reference paper:
+> Denial of Service (DoS) attacks consume resources in networks, server clusters, or end hosts, with the malicious objective of preventing or severely degrading service to legitimate users. Resources that are typically consumed in such attacks include network bandwidth, server or router CPU cycles, server interrupt processing capacity, and specific protocol data structures.  Example DoS attacks include TCP SYN attacks that consume protocol data structures on the server operating system; ICMP directed broadcasts that direct a broadcast address to send a flood of ICMP replies to a target host
+thereby overwhelming it; and DNS flood attacks that use specific weaknesses in DNS protocols to generate high volumes of traffic directed at a targeted victim.
+>
+> Common to the above attacks is a large number of compromised machines or agents involved in the attack and a “sledge-hammer” approach of high-rate transmission of packets towards the attacked node. While potentially quite harmful, the high-rate nature of such attacks presents a statistical anomaly to network monitors such that the attack can potentially be detected, the attacker identified, and the effects of the attack mitigated.
+>
+> In  this  paper,  we  study  low-rate  DoS  attacks,  which  we  term “shrew attacks,” that attempt to deny bandwidth to TCP flows while sending at sufficiently low average rate to elude detection by counter-DoS mechanisms.
 
 <hr> 
 
@@ -27,7 +39,7 @@ Once ns-3 is built, this attack can be simulated by running tcp-low-rate.cc:
 ./waf --run scratch/tcp-low-rate
 ```
 
-The PCAP files are stored in the Low-Rate-TCP-DoS-Attack/PCAPs folder for further analysis.  
+The PCAP files are stored in the `Low-Rate-TCP-DoS-Attack/PCAPs` folder for further analysis.  
 
 <hr>
 
@@ -46,6 +58,10 @@ The different parameters that affect the attack can be varied by varying the mac
 
 ### Procedure
 * Initially, the following topology is set-up.  
+<p align = "center">
+<img src = "https://github.com/samvid25/Low-Rate-TCP-DoS-Attack/blob/master/docs/topology.png" alt = "Topology" />
+</p>
+
 * The legitimate sender runs a TCP Bulk Send application (simulating an actual TCP transfer).
 * The attacker node runs a UDP On Off application (simulating the periodic bursts).
 * The receiving node just has a TCP and UDP sink running to receive the segments/datagrams.
@@ -67,7 +83,7 @@ Burst Duration | Attacker's Rate
 0.25s | 7000KB/s
 
 <p align = "center">
-<img src = "https://github.com/samvid25/Low-Rate-TCP-DoS-Attack/blob/master/low_rate_doc/graph.png" alt = "Throughput" />
+<img src = "https://github.com/samvid25/Low-Rate-TCP-DoS-Attack/blob/master/docs/graph.png" alt = "Throughput" />
 </p>
 
 <hr>
