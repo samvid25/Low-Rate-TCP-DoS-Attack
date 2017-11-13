@@ -1,0 +1,15 @@
+.heading {
+    text-align: center;
+}
+
+#myCanvas {
+    height: 300px;
+    width: 800px;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 25px;
+}
+
+.reset-btn {
+    display: none;
+}
