@@ -6,6 +6,7 @@
     </title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
@@ -41,60 +42,46 @@
         </div>
         <br>
         <h2>Explanation</h2>
-        <hr />
-        The ns-3 simulation was run for 100 seconds and the observations were recorded using the following
-        parameters :
+        <hr /> The ns-3 simulation was run for 100 seconds and the observations were recorded using the following parameters :
         <br /><br />
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>Burst Duration</th>
-              <th>Attacker's rate</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>0.15 s</td>
-              <td>12000 KB/s</td>
-            </tr>
-            <tr>
-              <td>0.25 s</td>
-              <td>7000 KB/s</td>
-            </tr>
-            <tr>
-              <td>0.20 s</td>
-              <td>12000 KB/s</td>
-            </tr>
-          </tbody>
+        <table class="table table-hover custom-table">
+            <thead>
+                <tr>
+                    <th class="first-col">Burst Duration</th>
+                    <th>Attacker's rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="first-col">0.15 s</td>
+                    <td>12000 KB/s</td>
+                </tr>
+                <tr>
+                    <td class="first-col">0.25 s</td>
+                    <td>7000 KB/s</td>
+                </tr>
+                <tr>
+                    <td class="first-col">0.20 s</td>
+                    <td>12000 KB/s</td>
+                </tr>
+            </tbody>
         </table>
         <br />
         <p>
-          The graph indicates that the effectiveness of the attack
-          does not increase with the attacker’s average rate. Most critically,
-          there are two “nulls” in the frequency response
-          in which TCP throughput almost becomes zero. In particular, Throughput is lowest when
-          when :<br />
-          <ul>
-            <li>
-            <b>burstPeriod=minRTO</b>
-            </li>
-            <li>
-              <b>burstPeriod=minRTO/2</b>.
-            </li>
-          </ul>
-          <br />
-          The physical interpretation of the graph
-          is as follows: <br />If the attacker creates the minRTO-periodic
-          outages, it will completely deny service to the TCP traffic. Once the
-          brief outage occurs, all flows will simultaneously timeout. When
-          their timeout expires after minRTO seconds and they again transmit
-          packets, the attacker creates another outage such that the flows
-          backoff again. Clearly, the most attractive period for a DoS attacker
-          is minRTO, since it is the null frequency that minimizes
-          the DoS flow’s average rate. When T>minRTO, as the
-          period of the attack increases, the TCP flows obtain increasingly
-          higher throughput during durations between expiration of retransmission
-          timers and the subsequent DoS outage.
+            The graph indicates that the effectiveness of the attack does not increase with the attacker’s average rate. Most critically, there are two “nulls” in the frequency response in which TCP throughput almost becomes zero. In particular, Throughput is lowest
+            when when :<br />
+            <ul>
+                <li>
+                    <b>burstPeriod=minRTO</b>
+                </li>
+                <li>
+                    <b>burstPeriod=minRTO/2</b>.
+                </li>
+            </ul>
+            <br /> The physical interpretation of the graph is as follows: <br />If the attacker creates the minRTO-periodic outages, it will completely deny service to the TCP traffic. Once the brief outage occurs, all flows will simultaneously timeout.
+            When their timeout expires after minRTO seconds and they again transmit packets, the attacker creates another outage such that the flows backoff again. Clearly, the most attractive period for a DoS attacker is minRTO, since it is the null
+            frequency that minimizes the DoS flow’s average rate. When T>minRTO, as the period of the attack increases, the TCP flows obtain increasingly higher throughput during durations between expiration of retransmission timers and the subsequent
+            DoS outage.
         </p>
         <div class="row" style="text-align:center;">
             <a href="index.html" style="text-decoration:none;" class="btn btn-primary">

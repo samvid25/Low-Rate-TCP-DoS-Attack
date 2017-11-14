@@ -13,3 +13,25 @@
 .reset-btn {
     display: none;
 }
+
+.round-box {
+    text-align: justify;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.first-col {
+    border-right: 1px solid black;
+}
+
+.custom-table {
+    width: 400px;
+    margin: 0 auto;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.custom-table th {
+    text-align: center !important;
+}
