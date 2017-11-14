@@ -26,6 +26,17 @@
             </h1>
         </div>
         <hr>
+        <div id = "description" style = "text-align:center; border: 1px solid black; border-radius: 5px; padding: 15px 15px 15px 15px;">
+            DoS attacks can be detected by counter-DoS mechanisms such as CouldFlare. Here, we simulate a 'Low-Rate TCP targetted DoS
+            attack' which is harder to detect as compared to the traditional DoS attacks. <br> These DoS attacks make use of the TCP congestion
+            control's retransmission timeout (RTO) functionality to stop communication between a sender and a receiver. Instead of flooding
+            the network with traffic, as in a normal DoS attack, we 'time' these floods such that they congest the network right when
+            the TCP sender retransmits when there is a packet loss. This will lead to the sender waiting for another RTO period, after
+            which this flood repeats again. <br> Hence by carefully timing these attack bursts, we can evade counter-DoS mechanisms, and at
+            the same hinder communication between the TCP sender and receiver.
+        </div>
+        <br>
+        <hr>
         <div class="row">
             <h3>Instructions to Use:</h3>
             <ol>
