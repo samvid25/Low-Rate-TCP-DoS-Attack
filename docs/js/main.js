@@ -84,6 +84,11 @@ window.onload = function() {
     text.justification = 'center';
     text.fillColor = 'black';
     text.content = '1.5 Mbps';
+    textPoint = new Point((xc3 + xc4) / 2, yLine + 15);
+    text = new PointText(textPoint);
+    text.justification = 'center';
+    text.fillColor = 'black';
+    text.content = 'Bottleneck Link';
     link2.strokeColor = 'black';
     link2.strokeWidth = 0.5;
 

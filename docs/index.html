@@ -26,55 +26,28 @@
             </h1>
         </div>
         <hr>
-        <div id = "description" style = "text-align: justify; border: 1px solid black; border-radius: 5px; padding: 15px 15px 15px 15px;">
-            DoS attacks can be detected by counter-DoS mechanisms such as CouldFlare. Here, we simulate a 'Low-Rate TCP targetted DoS
-            attack' which is harder to detect as compared to the traditional DoS attacks. <br> These DoS attacks make use of the TCP congestion
-            control's retransmission timeout (RTO) functionality to stop communication between a sender and a receiver. Instead of flooding
-            the network with traffic, as in a normal DoS attack, we 'time' these floods such that they congest the network right when
-            the TCP sender retransmits when there is a packet loss. This will lead to the sender waiting for another RTO period, after
-            which this flood repeats again. <br> Hence by carefully timing these attack bursts, we can evade counter-DoS mechanisms, and at
-            the same hinder communication between the TCP sender and receiver.
-        </div>
-        <hr>
-        <div id = "procedure" style = "text-align: justify; border: 1px solid black; border-radius: 5px; padding: 15px 15px 15px 15px;">
-            <h2>Steps</h2> <br>
-            <ul>
-                <li> Initially, the following topology is set-up. </li>
-                <p align = "center">
-                <img src = "./topology.png" alt = "Topology" />
-                </p>
-                <li> The legitimate sender runs a TCP Bulk Send application (simulating an actual TCP transfer). </li>
-                <li> The attacker node runs a UDP On Off application (simulating the periodic bursts). </li>
-                <li> The receiving node just has a TCP and UDP sink running to receive the segments/datagrams. </li>
-                <li> Once the link and node parameters are defined, and the topology is set up, the start and stop times of the applications and the frequency of the attacker bursts must be defined. </li>
-                <li> The frequency of the attacker bursts can be varied by setting the 'OnTime' and 'OffTime' attributes of the OnOff Helper. The attack gives the best results at OnTime = 0.25s and OffTime = 0.75s. </li>
-                <li> All the applications except the Bulk Send application start at time t = 0. The Bulk Send application on the sender node will start at a time equal to the OffTime of the UDP On-Off application on the attacker. This is because the UDP OnOff application is initially in the Off state. This makes sure that both the sender and attacker effectively start at the same time. </li>
-                <li> The data rate for the attacker application must be set so that it saturates the bottleneck link in the duration that it is on (OnTime). </li>
-            </ul>
-        </div>
-        <br>
-        <hr>
-        <div class="row">
-            <h3>Instructions to Use:</h3>
+        <div id="description" class="round-box">
+            <h3>Instructions to Use</h3>
             <ol>
                 <li>Select the Speed and Burst Time</li>
-                <li>Click Start Button to Start the Animation</li>
-                <li>Click Capture Button to pause the animation at any time (however, the animation will continue in the background)</li>
-                <li>Click Refresh to reload the page and select another speed</li>
+                <li>Click <b>Start</b> button to start the animation</li>
+                <li>Click <b>Capture</b> button to pause the animation at any time (however, the animation will continue in the background)</li>
+                <li>Click <b>Refresh</b> to reload the page and select another speed</li>
             </ol>
+            <small>*Capture functionality doesn't work as expected as of yet.</small>
         </div>
         <br>
-        <div class="row">
-            <div class="form-group col-sm-3">
+        <div class="" style="border:1px solid black;border-radius:5px;padding-top:5px;">
+            <div class="form-group col-sm-3 col-sm-offset-2">
                 <div class="col-sm-4">
                     <label class="control-label" style="margin-top:5px;">Speed:</label>
                 </div>
                 <div class="col-sm-8">
                     <select class="form-control" id="speed">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="5">5</option>
-                        <option value="10">10</option>
+                        <option value="1">10</option>
+                        <option value="2" selected>5</option>
+                        <option value="5">2</option>
+                        <option value="10">1</option>
                     </select>
                 </div>
             </div>
@@ -98,10 +71,14 @@
                 <button id="refreshButton" class="btn btn-default refresh-btn" onclick="refreshAnimation();">Refresh</button>
             </div>
             <br>
-            <div class="" style="border:1px solid black;">
-                <div class="row" id="timeDiv" style="text-align:center;display:none;">
-                    <span style="font-weight:700;">Time: </span> <span id="timeDisplay"></span>
-                    <span style="font-weight:700;">Current RTO: </span> <span id="rtoDisplay"></span>
+            <div class="">
+                <div class="row" id="timeDiv" style="text-align:center;">
+                    <div class="col-sm-3 col-sm-offset-3" style="background: #99ccff;color:white;padding: 2px;">
+                        <span style="font-weight:700;">Time: </span> <span id="timeDisplay">0.00</span>
+                    </div>
+                    <div class="col-sm-3" style="background: #77ce9a;color:white;padding: 2px;">
+                        <span style="font-weight:700;">Current RTO: </span> <span id="rtoDisplay">1</span>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-10 col-sm-offset-1">
@@ -112,6 +89,48 @@
                 </div>
             </div>
         </div>
+        <hr>
+        <div id="description" class="round-box">
+            <h2>Explanation</h2>
+            <p>
+                DoS attacks can be detected by counter-DoS mechanisms such as CouldFlare due to their high data rate. Here, we simulate a 'Low-Rate TCP targetted DoS attack' which is harder to detect as compared to the traditional DoS attacks.
+                <br> These low-rate DoS attacks make use of the TCP congestion control's Retransmission TimeOut (RTO) functionality to reduce communication between a sender and a receiver. Instead of flooding the network with continuous or large traffic,
+                as in a normal DoS attack, we 'time' these floods such that they congest the network right when the TCP sender retransmits when there is a packet loss. This will lead to the sender waiting for another RTO period, after which this flood
+                repeats again. These bursts have a data rate just sufficient enough to congest the bottleneck link that is present between the sender and the receiver. Since the bursts take place for a very small duration, the average data rate isn't
+                expected to reach a value that can be detected.
+                <br> Hence by carefully timing these attack bursts, we can evade counter-DoS mechanisms, and at the same hinder communication between the TCP sender and receiver.
+            </p>
+            <p>
+                Note the way the current RTO value changes. In the TCP used, that is, TCP New Reno, RTO value is expected to double everytime a lost packet is retransmitted. That is, assume as a certain point of time, it has RTO value equal to that of minRTO value, that
+                is, 1 second. Then the subsequent RTO values for every packet retransmitted will be 2,4,8,16 ..so on. However once, an acknowledgement is successfully received RTO value is set back to the value calculated by the formula:
+                <p style="margin-left: 15px;">
+                    <i>RTO</i> = max(<i>minRTO</i>,<i>SRTT</i> + max(<i>G</i>,4*<i>RTTVAR</i>))
+                </p>
+                where minRTO is decided by the type of TCP and the system the TCP runs on, SRTT refers to Smoothed Round-Trip Time (calculated from measured RTT) and RTTVAR refers to Round-Trip Time Variation.
+            </p>
+            <p>
+                One way to launch a very successful attack is to time the attacker bursts at the exact time the sender is about to send some packets. The animation above shows a similar scenario.
+            </p>
+        </div>
+        <hr>
+        <div id="procedure" class="round-box">
+            <h2>Steps</h2> <br>
+            <ul>
+                <li> Initially, the following topology is set-up. </li>
+                <p align="center">
+                    <img src="./topology.png" alt="Topology" />
+                </p>
+                <li> The legitimate sender runs a TCP Bulk Send application (simulating an actual TCP transfer). </li>
+                <li> The attacker node runs a UDP On Off application (simulating the periodic bursts). </li>
+                <li> The receiving node just has a TCP and UDP sink running to receive the segments/datagrams. </li>
+                <li> Once the link and node parameters are defined, and the topology is set up, the start and stop times of the applications and the frequency of the attacker bursts must be defined. </li>
+                <li> The frequency of the attacker bursts can be varied by setting the 'OnTime' and 'OffTime' attributes of the OnOff Helper. The attack gives the best results at OnTime = 0.25s and OffTime = 0.75s. </li>
+                <li> All the applications except the Bulk Send application start at time t = 0. The Bulk Send application on the sender node will start at a time equal to the OffTime of the UDP On-Off application on the attacker. This is because the UDP OnOff
+                    application is initially in the Off state. This makes sure that both the sender and attacker effectively start at the same time. </li>
+                <li> The data rate for the attacker application must be set so that it saturates the bottleneck link in the duration that it is on (OnTime). </li>
+            </ul>
+        </div>
+        <br>
         <hr>
         <div class="row" style="text-align:center;">
             <a href="graphs.html" style="text-decoration:none;" class="btn btn-primary">
