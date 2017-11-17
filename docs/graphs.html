@@ -6,6 +6,7 @@
     </title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/main.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -18,11 +19,21 @@
 
 <body>
     <div class="container">
-        <div class="row" style="text-align:center;">
-            <h1>Graph: Throughput vs Burst Period</h1>
+        <div class="row heading">
+            <div class="box-heading">
+                <h1>
+                    Low Rate TCP-Targeted DoS Attack
+                </h1>
+            </div>
+        </div>
+        <div class="menu">
+            <a href="index.html"><i class="fa fa-home"></i> Home</a>
+            <a href="animate.html"><i class="fa fa-play"></i> Animation</a>
+            <a class="active" href="graphs.html"><i class="fa fa-line-chart"></i> Graphs</a>
+            <a href="https://www.github.com/samvid25/Low-Rate-TCP-DoS-Attack"><i class="fa fa-github"></i> Source</a>
         </div>
         <hr>
-        <div class="row">
+        <div class="row round-box" style="margin-left: 0px; margin-right: 0px;">
             <div class="col-sm-2">
             </div>
             <div class="col-sm-8">
@@ -41,6 +52,7 @@
             <div class="col-sm-2"></div>
         </div>
         <br>
+        <div class="round-box">
         <h2>Explanation</h2>
         <hr /> The ns-3 simulation was run for 100 seconds and the observations were recorded using the following parameters :
         <br /><br />
@@ -83,12 +95,7 @@
             frequency that minimizes the DoS flow’s average rate. When T>minRTO, as the period of the attack increases, the TCP flows obtain increasingly higher throughput during durations between expiration of retransmission timers and the subsequent
             DoS outage.
         </p>
-        <div class="row" style="text-align:center;">
-            <a href="index.html" style="text-decoration:none;" class="btn btn-primary">
-                Go to Animation
-            </a>
         </div>
-        <br />
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <script>

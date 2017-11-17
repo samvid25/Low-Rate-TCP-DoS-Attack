@@ -35,3 +35,29 @@
 .custom-table th {
     text-align: center !important;
 }
+
+.menu {
+    color: white;
+    padding: 15px;
+    border-top: 1px solid white;
+    text-align: center;
+}
+
+
+.menu a {
+    background: #f44141;
+    z-index: 95;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    font-size: 16px;
+    padding: 18px;
+}
+
+.menu a:hover {
+    background: rgb(252, 35, 35);
+}
+
+.active {
+    background: rgb(252, 35, 35) !important;
+}

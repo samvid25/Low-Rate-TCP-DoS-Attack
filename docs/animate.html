@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>
+        Low Rate TCP-Targeted Denial of Service Attack
+    </title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/main.css">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.11.5/paper-full.js"></script>
+
+    <script src="./js/main.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.11.5/paper-full.min.js" canvas="myCanvas">
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row heading">
+            <div class="box-heading">
+                <h1>
+                    Low Rate TCP-Targeted DoS Attack
+                </h1>
+            </div>
+        </div>
+        <div class="menu">
+            <a href="index.html"><i class="fa fa-home"></i> Home</a>
+            <a class="active" href="animate.html"><i class="fa fa-play"></i> Animation</a>
+            <a href="graphs.html"><i class="fa fa-line-chart"></i> Graphs</a>
+            <a href="https://www.github.com/samvid25/Low-Rate-TCP-DoS-Attack"><i class="fa fa-github"></i> Source</a>
+        </div>
+        <hr>
+        <div id="description" class="round-box">
+            <h3>Instructions to Use</h3>
+            <ol>
+                <li>Select the Speed and Burst Time</li>
+                <li>Click <b>Start</b> button to start the animation</li>
+                <li>Click <b>Capture</b> button to pause the animation at any time (however, the animation will continue in the background)</li>
+                <li>Click <b>Refresh</b> to reload the page and select another speed</li>
+            </ol>
+            <small>*Capture functionality doesn't work as expected as of yet.</small>
+        </div>
+        <br>
+        <div class="" style="border:1px solid black;border-radius:5px;padding-top:5px;">
+            <div class="form-group col-sm-3 col-sm-offset-2">
+                <div class="col-sm-4">
+                    <label class="control-label" style="margin-top:5px;">Speed:</label>
+                </div>
+                <div class="col-sm-8">
+                    <select class="form-control" id="speed">
+                        <option value="1">10</option>
+                        <option value="2" selected>5</option>
+                        <option value="5">2</option>
+                        <option value="10">1</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-sm-3">
+                <div class="col-sm-6">
+                    <label class="control-label" style="margin-top:5px;">Burst Length: </label>
+                </div>
+                <div class="col-sm-6">
+                    <select class="form-control" id="burstLength">
+                        <option value="0.20">0.20</option>
+                        <option value="0.25">0.25</option>
+                        <option value="0.3">0.3</option>
+                        <option value="0.5" selected>0.5</option>
+                        <option value="1">1</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <button id="startButton" class="btn btn-success" onclick="startAnimation();">Start</button>
+                <button id="resetButton" class="btn btn-danger reset-btn" onclick="resetAnimation();">Capture</button>
+                <button id="refreshButton" class="btn btn-default refresh-btn" onclick="refreshAnimation();">Refresh</button>
+            </div>
+            <br>
+            <div class="">
+                <div class="row" id="timeDiv" style="text-align:center;">
+                    <div class="col-sm-3 col-sm-offset-3" style="background: #99ccff;color:white;padding: 2px;">
+                        <span style="font-weight:700;">Time: </span> <span id="timeDisplay">0.00</span>
+                    </div>
+                    <div class="col-sm-3" style="background: #77ce9a;color:white;padding: 2px;">
+                        <span style="font-weight:700;">Current RTO: </span> <span id="rtoDisplay">1</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <p style="text-align:center;">
+                            <canvas id="myCanvas" resize></canvas>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+</body>
+
+</html>

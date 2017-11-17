@@ -7,7 +7,9 @@
     </title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="./css/main.css">
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -21,74 +23,37 @@
 <body>
     <div class="container">
         <div class="row heading">
-            <h1>
-                Low Rate TCP-Targeted DoS Attack
-            </h1>
+            <div class="box-heading">
+                <h1>
+                    Low Rate TCP-Targeted DoS Attack
+                </h1>
+            </div>
+        </div>
+        <div class="menu">
+            <a class="active" href="index.html"><i class="fa fa-home"></i> Home</a>
+            <a href="animate.html"><i class="fa fa-play"></i> Animation</a>
+            <a href="graphs.html"><i class="fa fa-line-chart"></i> Graphs</a>
+            <a href="https://www.github.com/samvid25/Low-Rate-TCP-DoS-Attack"><i class="fa fa-github"></i> Source</a>
         </div>
         <hr>
-        <div id="description" class="round-box">
-            <h3>Instructions to Use</h3>
-            <ol>
-                <li>Select the Speed and Burst Time</li>
-                <li>Click <b>Start</b> button to start the animation</li>
-                <li>Click <b>Capture</b> button to pause the animation at any time (however, the animation will continue in the background)</li>
-                <li>Click <b>Refresh</b> to reload the page and select another speed</li>
-            </ol>
-            <small>*Capture functionality doesn't work as expected as of yet.</small>
+        <div id="procedure" class="round-box">
+            <h2>Steps</h2> <br>
+            <ul>
+                <li> Initially, the following topology is set-up. </li>
+                <p align="center">
+                    <img src="./topology.png" alt="Topology" />
+                </p>
+                <li> The legitimate sender runs a TCP Bulk Send application (simulating an actual TCP transfer). </li>
+                <li> The attacker node runs a UDP On Off application (simulating the periodic bursts). </li>
+                <li> The receiving node just has a TCP and UDP sink running to receive the segments/datagrams. </li>
+                <li> Once the link and node parameters are defined, and the topology is set up, the start and stop times of the applications and the frequency of the attacker bursts must be defined. </li>
+                <li> The frequency of the attacker bursts can be varied by setting the 'OnTime' and 'OffTime' attributes of the OnOff Helper. The attack gives the best results at OnTime = 0.25s and OffTime = 0.75s. </li>
+                <li> All the applications except the Bulk Send application start at time t = 0. The Bulk Send application on the sender node will start at a time equal to the OffTime of the UDP On-Off application on the attacker. This is because the UDP OnOff
+                    application is initially in the Off state. This makes sure that both the sender and attacker effectively start at the same time. </li>
+                <li> The data rate for the attacker application must be set so that it saturates the bottleneck link in the duration that it is on (OnTime). </li>
+            </ul>
         </div>
         <br>
-        <div class="" style="border:1px solid black;border-radius:5px;padding-top:5px;">
-            <div class="form-group col-sm-3 col-sm-offset-2">
-                <div class="col-sm-4">
-                    <label class="control-label" style="margin-top:5px;">Speed:</label>
-                </div>
-                <div class="col-sm-8">
-                    <select class="form-control" id="speed">
-                        <option value="1">10</option>
-                        <option value="2" selected>5</option>
-                        <option value="5">2</option>
-                        <option value="10">1</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-3">
-                <div class="col-sm-6">
-                    <label class="control-label" style="margin-top:5px;">Burst Length: </label>
-                </div>
-                <div class="col-sm-6">
-                    <select class="form-control" id="burstLength">
-                        <option value="0.20">0.20</option>
-                        <option value="0.25">0.25</option>
-                        <option value="0.3">0.3</option>
-                        <option value="0.5" selected>0.5</option>
-                        <option value="1">1</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <button id="startButton" class="btn btn-success" onclick="startAnimation();">Start</button>
-                <button id="resetButton" class="btn btn-danger reset-btn" onclick="resetAnimation();">Capture</button>
-                <button id="refreshButton" class="btn btn-default refresh-btn" onclick="refreshAnimation();">Refresh</button>
-            </div>
-            <br>
-            <div class="">
-                <div class="row" id="timeDiv" style="text-align:center;">
-                    <div class="col-sm-3 col-sm-offset-3" style="background: #99ccff;color:white;padding: 2px;">
-                        <span style="font-weight:700;">Time: </span> <span id="timeDisplay">0.00</span>
-                    </div>
-                    <div class="col-sm-3" style="background: #77ce9a;color:white;padding: 2px;">
-                        <span style="font-weight:700;">Current RTO: </span> <span id="rtoDisplay">1</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-10 col-sm-offset-1">
-                        <p style="text-align:center;">
-                            <canvas id="myCanvas" resize></canvas>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
         <hr>
         <div id="description" class="round-box">
             <h2>Explanation</h2>
@@ -113,31 +78,6 @@
             </p>
         </div>
         <hr>
-        <div id="procedure" class="round-box">
-            <h2>Steps</h2> <br>
-            <ul>
-                <li> Initially, the following topology is set-up. </li>
-                <p align="center">
-                    <img src="./topology.png" alt="Topology" />
-                </p>
-                <li> The legitimate sender runs a TCP Bulk Send application (simulating an actual TCP transfer). </li>
-                <li> The attacker node runs a UDP On Off application (simulating the periodic bursts). </li>
-                <li> The receiving node just has a TCP and UDP sink running to receive the segments/datagrams. </li>
-                <li> Once the link and node parameters are defined, and the topology is set up, the start and stop times of the applications and the frequency of the attacker bursts must be defined. </li>
-                <li> The frequency of the attacker bursts can be varied by setting the 'OnTime' and 'OffTime' attributes of the OnOff Helper. The attack gives the best results at OnTime = 0.25s and OffTime = 0.75s. </li>
-                <li> All the applications except the Bulk Send application start at time t = 0. The Bulk Send application on the sender node will start at a time equal to the OffTime of the UDP On-Off application on the attacker. This is because the UDP OnOff
-                    application is initially in the Off state. This makes sure that both the sender and attacker effectively start at the same time. </li>
-                <li> The data rate for the attacker application must be set so that it saturates the bottleneck link in the duration that it is on (OnTime). </li>
-            </ul>
-        </div>
-        <br>
-        <hr>
-        <div class="row" style="text-align:center;">
-            <a href="graphs.html" style="text-decoration:none;" class="btn btn-primary">
-                Go to Graphs
-            </a>
-        </div>
-        <br>
     </div>
 </body>
 
