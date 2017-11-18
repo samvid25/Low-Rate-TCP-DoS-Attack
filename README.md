@@ -14,7 +14,7 @@ These DoS attacks make use of the TCP congestion control's retransmission timeou
 
 Hence by carefully timing these attack bursts, we can evade counter-DoS mechanisms, and at the same hinder communication between the TCP sender and receiver.
 
-From the reference paper:
+From the [reference paper](http://oriolrius.cat/article_fitxers/326/pdf/p75-kuzmanovic.pdf):
 > Denial of Service (DoS) attacks consume resources in networks, server clusters, or end hosts, with the malicious objective of preventing or severely degrading service to legitimate users. Resources that are typically consumed in such attacks include network bandwidth, server or router CPU cycles, server interrupt processing capacity, and specific protocol data structures.  Example DoS attacks include TCP SYN attacks that consume protocol data structures on the server operating system; ICMP directed broadcasts that direct a broadcast address to send a flood of ICMP replies to a target host
 thereby overwhelming it; and DNS flood attacks that use specific weaknesses in DNS protocols to generate high volumes of traffic directed at a targeted victim.
 >
@@ -25,7 +25,7 @@ thereby overwhelming it; and DNS flood attacks that use specific weaknesses in D
 <hr> 
 
 ### Steps to Reproduce
-This project has been done using ns-3.27.
+This project has been successfully tested and is known to be working on ns-3.27.
 
 Clone the repository to your local machine:
 ```bash
@@ -50,14 +50,14 @@ The PCAP files are stored in the `Low-Rate-TCP-DoS-Attack/PCAPs` folder for furt
 
 ### Experimentation
 The different parameters that affect the attack can be varied by varying the macros in `scratch/tcp-low-rate.cc`.
-* `BULK_SEND_MAX_BYTES`: The maximum bytes the legit sender transmits.
-* `MAX_SIMULATION_TIME`: The duration for which the simulation runs.
-* `ATTACKER_START`: The time at which the attacker node starts the UDP burst.
-* `ATTACKER_RATE`: The data rate of the attacker node's UDP burst.
-* `ON_TIME`: The burst length of the attack burst.
-* `BURST_PERIOD`: The burst period of the attack burst.
-* `OFF_TIME`: The duration for which there is no attacker traffic (`= BURST_PERIOD - ON_TIME`)
-* `SENDER_START`: The time at which the legit sender starts transmitting data.
+* `BULK_SEND_MAX_BYTES`: The maximum bytes the legit sender transmits (in Bytes).
+* `MAX_SIMULATION_TIME`: The duration for which the simulation runs (in Seconds).
+* `ATTACKER_START`: The time at which the attacker node starts the UDP burst (in Seconds).
+* `ATTACKER_RATE`: The data rate of the attacker node's UDP burst (in Kb/s).
+* `ON_TIME`: The burst length of the attack burst (in Seconds).
+* `BURST_PERIOD`: The burst period of the attack burst (in Seconds).
+* `OFF_TIME`: The duration for which there is no attacker traffic (`= BURST_PERIOD - ON_TIME`) (in Seconds).
+* `SENDER_START`: The time at which the legit sender starts transmitting data (in Seconds).
 
 <hr>
 
@@ -80,12 +80,28 @@ The different parameters that affect the attack can be varied by varying the mac
 ### Observations
 The following observations have been made for a 100 second simulation, with the following parameters:
 
-
-Burst Duration | Attacker's Rate
----|---
-0.15s | 12000KB/s
-0.2s | 12000KB/s
-0.25s | 7000KB/s
+<table align="center">
+  <thead>
+    <tr>
+      <th>Burst Duration (in Seconds)</th>
+      <th>Attacker's Rate (in Kb/s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0.15</td>
+      <td>12000</td>
+    </tr>
+    <tr>
+      <td>0.2</td>
+      <td>12000</td>
+    </tr>
+    <tr>
+      <td>0.25</td>
+      <td>7000</td>
+    </tr>
+  </tbody>
+ </table>
 
 <p align = "center">
 <img src = "https://github.com/samvid25/Low-Rate-TCP-DoS-Attack/blob/master/docs/graph.png" alt = "Throughput" />
