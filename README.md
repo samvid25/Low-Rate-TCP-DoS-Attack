@@ -25,6 +25,8 @@ thereby overwhelming it; and DNS flood attacks that use specific weaknesses in D
 <hr> 
 
 ### Steps to Reproduce
+This project has been done using ns-3.27.
+
 Clone the repository to your local machine:
 ```bash
 git clone git@github.com:samvid25/Low-Rate-TCP-DoS-Attack.git
